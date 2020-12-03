@@ -1,0 +1,22 @@
+#esquinas_redondeadas {
+border: rgb(1, 105, 65) 3px solid;
+border-radius: 10px;
+height: 300px;
+width: 600px;
+background-color: #FEB1CD;
+}
+
+#tabla_datos {
+    border: rgb(217, 223, 141) 3px solid;
+    border-radius: 10px;
+    height: 98px;
+    width: 185px;
+}
+
+#td_t1 {
+    border: black 1px solid;
+}
+
+#th_t1 {
+    border: black 1px solid;
+}
