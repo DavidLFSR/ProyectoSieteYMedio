@@ -11,7 +11,42 @@ cartas_backup=[(1,'oros',1),(2,'oros',2),(3,'oros',3),(4,'oros',4),(5,'oros',5),
         (1,'espadas',1),(2,'espadas',2),(3,'espadas',3),(4,'espadas',4),(5,'espadas',5),(6,'espadas',6),(7,'espadas',7),(8,'espadas',8),(9,'espadas',9),(10,'espadas',0.5),(11,'espadas',0.5),(12,'espadas',0.5),
         (1,'bastos',1),(2,'bastos',2),(3,'bastos',3),(4,'bastos',4),(5,'bastos',5),(6,'bastos',6),(7,'bastos',7),(8,'bastos',8),(9,'bastos',9),(10,'bastos',0.5),(11,'bastos',0.5),(12,'bastos',0.5)]
 # Hacer lista de jugador max 8
-jugadores=['guillem', 'aida', 'marti']
+bots=input('Desea jugar con bots? (Si/No): ').upper()
+if bots=='NO':
+    jugadores=[]
+    while True:
+        numj=int(input('nombre de jugadors(max8): '))
+        if numj>8 or numj<0:
+            print('input invalid')
+        else:
+            break
+    for i in range(numj):
+        Nombre=input("Escriu el nom d'un jugador: ")
+        if Nombre.isalnum()==True and Nombre[0].isalpha()==True:
+            jugadores.append(Nombre)
+        elif Nombre.isalnum()==False:
+            print("El nom només pot ser de lletras i números i no pot contenir espais.")
+        elif Nombre[0].isalpha()==False:
+            print("El primer caràcter del nom ha de ser una lletra.")
+elif bots=='SI':
+    jugadores=[]
+    while True:
+        numj=int(input('Cuantos jugadores humanos(max7): '))
+        if numj>8 or numj<0:
+            print('input invalid')
+        else:
+            break
+    for i in range(numj):
+        Nombre=input("Escriu el nom d'un jugador: ")
+        if Nombre.isalnum()==True and Nombre[0].isalpha()==True:
+            jugadores.append(Nombre)
+        elif Nombre.isalnum()==False:
+            print("El nom només pot ser de lletras i números i no pot contenir espais.")
+        elif Nombre[0].isalpha()==False:
+            print("El primer caràcter del nom ha de ser una lletra.")
+    numbMAX=8-numj
+    numb=int(input('Cuantos bots(max{}): '.format(numbMAX)))
+
 # Escoger carta aleatoria por jugador para orden prioridad
 cartas_cojidas=[]
 for i in range(len(jugadores)):     #bucle para dar 1 carta a cada jugador
@@ -28,8 +63,7 @@ for i in range(len(jugadores)-1):   #ordeno x burbuha
         if jugadores[j][1][0]>jugadores[k][1][0]:
             aux=jugadores[j]
             jugadores[j]=jugadores[k]
-            jugadores[k]=aux
-print(jugadores)        #si el palo coincide gana el que tiene prioridad mas baja
+            jugadores[k]=aux    #si el palo coincide gana el que tiene prioridad mas baja
 for i in range(1,len(jugadores)):
     if jugadores[i-1][1][0]==jugadores[i][1][0]:
         prio1=palos_prio[jugadores[i-1][1][1]]
@@ -49,33 +83,20 @@ for i in jugadores:
     jugador[i]=temp
 cont=1
 for i in jugador.keys():
-    #carta_r=r.choice(cartas)
-    #cartas.remove(carta_r)
-    #jugador[i][0]=carta_r
-    #jugador[i][1]='jugando'
-    #jugador[i][2]='jugando'
-    print('\n', 'contador; ', cont, '\ntamaño jugador: ', len(jugador.keys()))
+    carta_r=r.choice(cartas)
+    cartas.remove(carta_r)
+    jugador[i][0]=carta_r
+    jugador[i][1]='jugando'
+    jugador[i][2]='jugando'
 
     if cont!=len(jugador.keys()):
-        print('dentro if')
-        print('-- prioridad antes: ', jugador[i][3])
         jugador[i][3]=cont
-        print('-- prioridad despues: ', jugador[i][3])
     else:
-        print('dentro else')
-        print('-- cont antes:',cont)
-        print('-- prioridad antes: ', jugador[i][3])
         jugador[i][3]=0
-        print('-- prioridad despues: ', jugador[i][3])
-
-    print('\n','contador; ',cont,'\ntamaño jugador: ',len(jugador.keys()))
-
-    #jugador[i][4]=carta_r[2]
-    print('\njugador ', jugador[i])
+    jugador[i][4]=carta_r[2]
     cont+=1
-
-print('\nfuera for, jugador: ', jugador)
-print('\n', 'contador; ', cont )
+    print(jugador[i])
+print(jugador)
 # Bucle nueva mano 0
 # Bucle mano por jugador 1
 # Sub Bucle mano por jugador 2
