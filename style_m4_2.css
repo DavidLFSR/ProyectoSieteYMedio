@@ -1,3 +1,9 @@
+.div_centrado{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    }
+
 #esquinas_redondeadas {
     border: rgb(138, 58, 230) 3px solid;
     border-radius: 10px;
