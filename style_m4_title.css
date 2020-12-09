@@ -1,6 +1,17 @@
+.div_centrado{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0em;
+    background: -webkit-linear-gradient(rgb(106, 90, 205), rgba(0, 106, 255, 0.7));
+    border: 10px dashed rgba(138, 255, 0, 0.5);
+    margin: auto;
+    }
+
 #text {
     text-align:center;
     font-family:"Thinoothin";
+
 }
 
 @font-face {

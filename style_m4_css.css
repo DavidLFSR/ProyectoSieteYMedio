@@ -1,0 +1,3 @@
+#fondo-radial {
+    background: repeating-radial-gradient(left bottom, ellipse farthest-side, #f7ff08 0%, #21ad11 10%, #00A3ef 20%);
+}
