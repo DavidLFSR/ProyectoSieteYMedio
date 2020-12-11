@@ -8,13 +8,6 @@
     margin: auto;
     }
 
-#text {
-    text-align:center;
-    font-family:"Thinoothin";
-
-}
-
-@font-face {
-    font-family:"Thinoothin";
-    src: url("thinoothin.otf") format("opentype");
-}
+    #text {
+        font-family:Verdana;
+    }

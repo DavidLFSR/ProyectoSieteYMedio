@@ -10,14 +10,15 @@ border: rgb(1, 105, 65) 3px solid;
 border-radius: 10px;
 height: 300px;
 width: 600px;
-background-color: #FEB1CD;
+background-color:#f5f5dc;
 }
 
 #tabla_datos {
-    border: rgb(217, 223, 141) 3px solid;
+    border: black 3px solid;
     border-radius: 10px;
-    height: 98px;
-    width: 185px;
+    height: 103px;
+    width: 222px;
+ 
 }
 
 #td_t1 {
@@ -26,4 +27,8 @@ background-color: #FEB1CD;
 
 #th_t1 {
     border: black 1px solid;
+}
+
+body {
+    font-family:Verdana;
 }
