@@ -1,0 +1,6 @@
+.div_centrado{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5% 0;
+    }
