@@ -19,12 +19,13 @@ query1='WITH MyRowSet AS (select idparticipante,carta_inicial,count(carta_inicia
 query2='select nombre,max(apuesta),idpartida from (select case when username is not null then usuario.username else descripcion end as nombre,max(turnos.apuesta) as apuesta,partida.idpartida as idpartida from jugador left join bot on bot.idbot=jugador.idbot left join usuario on usuario.idusuario=jugador.idusuario inner join participante on jugador.idjugador=participante.id_jugador inner join turnos on participante.id_participante=turnos.idparticipante inner join partida on turnos.idpartida=partida.idpartida where turnos.apuesta is not null group by partida.idpartida,username) tabla where (apuesta,idpartida) in (select max(turnos.apuesta),partida.idpartida as apuesta from jugador left join bot on bot.idbot=jugador.idbot left join usuario on usuario.idusuario=jugador.idusuario inner join participante on jugador.idjugador=participante.id_jugador inner join turnos on participante.id_participante=turnos.idparticipante inner join partida on turnos.idpartida=partida.idpartida group by partida.idpartida order by max(turnos.apuesta) desc) group by idpartida;'
 query3='select nombre,min(apuesta),idpartida from (select case when username is not null then usuario.username else descripcion end as nombre,min(turnos.apuesta) as apuesta,partida.idpartida as idpartida from jugador left join bot on bot.idbot=jugador.idbot left join usuario on usuario.idusuario=jugador.idusuario inner join participante on jugador.idjugador=participante.id_jugador inner join turnos on participante.id_participante=turnos.idparticipante inner join partida on turnos.idpartida=partida.idpartida where turnos.apuesta is not null group by partida.idpartida,username) tabla where (apuesta,idpartida) in (select min(turnos.apuesta),partida.idpartida as apuesta from jugador left join bot on bot.idbot=jugador.idbot left join usuario on usuario.idusuario=jugador.idusuario inner join participante on jugador.idjugador=participante.id_jugador inner join turnos on participante.id_participante=turnos.idparticipante inner join partida on turnos.idpartida=partida.idpartida group by partida.idpartida order by min(turnos.apuesta) desc) group by idpartida;'
 query5='select distinct bot.descripcion,partida.ganador_partida, truncate(((2/sum(partida.idpartida))*100),2) as porcentaje from partida inner join participante on partida.ganador_partida=participante.id_participante inner join jugador on participante.id_jugador=jugador.idjugador inner join bot on jugador.idbot=bot.idbot where bot.idbot is not null;'
+query6='select usuario.idusuario "ID jugador",usuario.username "Nombre",partida.duracion "Duración partida" from usuario inner join jugador on jugador.idusuario=usuario.idusuario inner join participante on participante.id_jugador=jugador.idjugador inner join partida on partida.idpartida=participante.id_partida where partida.ganador_partida=usuario.idusuario union select bot.idbot,bot.descripcion,partida.duracion from bot inner join jugador on jugador.idbot=bot.idbot inner join participante on participante.id_jugador=jugador.idjugador inner join partida on partida.idpartida=participante.id_partida where partida.ganador_partida=bot.idbot order by "ID jugador" asc;'
 query11='select avg(t.apuesta) as "Media", p.idpartida from turnos t inner join partida p on p.idpartida = t.idpartida group by idpartida;'
 query12='select distinct u.*,apuesta , max(t.numero_turno) as "turno_max", pd.idpartida from usuario u inner join jugador j on u.idusuario = j.idusuario inner join participante p on j.idjugador = p.id_jugador inner join turnos t on p.id_participante = t.idparticipante inner join partida pd on pd.idpartida = t.idpartida group by idpartida,idparticipante -- having numero_turno in  (select max(numero_turno) from turnos group by idpartida) order by t.idpartida asc,idparticipante asc, numero_turno asc'
 query13='select count(carta_inicial) AS numero_de_cartas, sum(valor) AS valor_total, idpartida AS partida from turnos, cartas where carta_inicial=idcartas group by idpartida;'
-querys=[query1,query2,query3,query5,query11,query12,query13]
+querys=[query1,query2,query3,query5,query6,query11,query12,query13]
 
-def query_to_xml(query_sql):
+def query_to_xml(query_sql):    #En un xml ya abierto se escrine una query
     outfile.write('<query>\n')
     db = pymysql.connect(conexion, usuario, password, BBDD)
     cursor = db.cursor()
@@ -79,7 +80,7 @@ for config in root:
         auto_mode=bool(config.text)
     cont+=1
 
-def input_int(texto):
+def input_int(texto): #para que en un input obligar a que se meta un int
     while True:
         entrada=input(texto)
         try:
@@ -90,7 +91,7 @@ def input_int(texto):
             break
     return entrada
 
-def pausa():
+def pausa(): #para que el juego avance a un ritmo constante
     input('----pulsa enter para continuar----')
 
 
@@ -105,7 +106,7 @@ def reset_mazo():
 def accion_bot(lista_cartas,putnos_cartas):
     cantidad_no_muerte = 0
     cantidad_si_muerte = 0
-    for i in lista_cartas:
+    for i in lista_cartas:                  #el bot decide la accion segun el % que tenga de sobreivir si pide otra carta
         if putnos_cartas + i[2] > 7.5:
             cantidad_si_muerte += 1
         else:
@@ -128,7 +129,7 @@ def accion_bot(lista_cartas,putnos_cartas):
 
 def accion_bot_banca(punt_max_jugadores,puntuacion_cartas):
     global maxima_puntuacion
-    if puntuacion_cartas<maxima_puntuacion:
+    if puntuacion_cartas<maxima_puntuacion: #el bot_banca decide la accion segun la puntuacion mas alta que no sea mayor de 7.5, intenta empatar
         return 'jugando'
     else:
         return 'plantado'
@@ -136,12 +137,12 @@ def accion_bot_banca(punt_max_jugadores,puntuacion_cartas):
 def maxima_punt(puntos_jugador):
     global maxima_puntuacion
     if puntos_jugador<=7.5:
-        if puntos_jugador>maxima_puntuacion:
+        if puntos_jugador>maxima_puntuacion:    #para que la banca sepa cual es el maximo al que quiere empatar
             maxima_puntuacion=puntos_jugador
 
 def apuesta_bot(puntos_restantes_bot,limite):
     apostado=False
-    if limite[1]>puntos_restantes_bot:
+    if limite[1]>puntos_restantes_bot: #se define el max y el min y el bot apuesta un valor de ese rango
         max=int(puntos_restantes_bot)
     else:
         max=limite[1]
@@ -162,7 +163,7 @@ def apuesta_bot(puntos_restantes_bot,limite):
 
 #FUNCION PARA DEFINIR LOS USUARIOS
 def usuarios():
-    global jugadores
+    global jugadores        #se definen los jugadores segun se elija jugar con bots o no
     while True:
         bots=input('Desea jugar con bots? (Si/No): ').upper()
         if bots=='NO':
@@ -308,7 +309,7 @@ def mano():
                     jugador[i][1] = 'jugando'
                     if jugador[i][3] == 0 and i[:3] == 'bot':
                         while True:
-                            jugador[i][1] = accion_bot_banca(maxima_puntuacion, jugador[i][4])
+                            jugador[i][1] = accion_bot_banca(maxima_puntuacion, jugador[i][4]) #accion de la banco(bot)
                             if jugador[i][1] == 'jugando':
                                 carta_r = r.choice(cartas)
                                 cartas.remove(carta_r)
@@ -321,7 +322,7 @@ def mano():
                                     break
                             if jugador[i][1] == 'plantado':
                                 break
-                    elif jugador[i][3] == 0 and i[:3] != 'bot':
+                    elif jugador[i][3] == 0 and i[:3] != 'bot': #accion de la banca humana
                         while True and jugador[i][1]!='eliminado':
                             estado = input('\tQue quieres hacer:\n\t\t1)Plantarte\n\t\t2)Seguir ')
                             if estado == '1':
@@ -361,7 +362,7 @@ def mano():
                 if i[:3]=='bot':
                     jugador[i][5]=apuesta_bot(jugador[i][6],limit_mano)
                     while True:
-                        jugador[i][1]=accion_bot(cartas,jugador[i][4])
+                        jugador[i][1]=accion_bot(cartas,jugador[i][4]) #accion jugador bot
                         if jugador[i][1]=='jugando':
                             carta_r = r.choice(cartas)
                             cartas.remove(carta_r)
@@ -394,7 +395,7 @@ def mano():
                             print('\tNo puedes apostar más de lo que tienes')
                         else:
                             break
-                    while True and jugador[i][1]!='eliminado':
+                    while True and jugador[i][1]!='eliminado': #accion jugador humano
                         estado=input('\tQue quieres hacer:\n\t\t1)Plantarte\n\t\t2)Seguir ')
                         if estado=='1':
                             jugador[i][1]='plantado'
@@ -435,7 +436,7 @@ def apuestas():
             puntos_J=jugador[i][4]
             if puntos_J>7.5:
                 puntos_J=0
-            if puntos_J>puntos_B and puntos_J==7.5:
+            if puntos_J>puntos_B and puntos_J==7.5:             #se compara la puntuacion de la banca y el jugador para ver quien gana
                 if jugador[jugadores[-1]][6]<jugador[i][5]*2:
                     ganancia=jugador[jugadores[-1]][6]+jugador[i][5]
                     jugador[i][6]+=ganancia
@@ -464,7 +465,7 @@ def apuestas():
                 print('{}(banca) gana {}'.format(jugadores[-1],jugador[i][5]))
                 jugador[i][5] = 0
     #nuevas prioridades y banca,
-    if conseguido:
+    if conseguido:                  #para cambiar prioridades si algun jugador saca 7.5 y la banca no
         if len(sieteymedio)!=1:
             min=9 #como hay maximo 8 jugadores no va a haber una prioridad mayor a 9
             for j in range(len(sieteymedio)):
@@ -503,18 +504,18 @@ while True:
         usuarios()
         orden_jugadores()
         pausa()
-        jugador = {}
+        jugador = {}        #se define el diccionario de jugadores
         for i in jugadores:
             jugador[i] = ['1ra_carta', 'estado mano actual', 'estado partida', 'prioridad', 'valor cartas', 0,init_points, 'contador mano', ]
         contmano = 0
-        while contmano < max_r and partida:
+        while contmano < max_r and partida:     #el juego en si
             maxima_puntuacion = 0
             mano()
             apuestas()
             reset_mazo()
             pausa()
         if not partida:
-            print('HA GANADO {}'.format(ganador))
+            print('HA GANADO {}'.format(ganador))  #final del juego
         else:
             max = 0
             for i in jugador.keys():
@@ -523,20 +524,20 @@ while True:
                     ganador = i
             print('HA GANADO {} porque se han acabado los turnos'.format(ganador))
         break
-    elif que=='2':
-        with open('Resultadoquery.xml', 'w') as outfile:
+    elif que=='2':      #informes
+        with open('Resultadoquery.xml', 'w') as outfile:    #se empieza el xml
             outfile.write('<?xml version="1.0" ?>\n')
             for i in querys:
-                query_to_xml(i)
-        outfile.close()
+                query_to_xml(i)     #se escriben las querys
+        outfile.close()         #se cierra el xml
 
         while True:
             while True:
-                n = input_int('Que informe quieres ver?\n1- Mostrar la Carta inicial más repetida por cada jugador\n2- Jugador que realiza la apuesta más alta por partida\n3- Jugador que realiza apuesta más baja por partida\n4- Porcentaje de partidas ganadas Bots en general. \n5- Calcular la apuesta media por partida\n6- Mostrar los datos de los usuarios que no son bot, así como cual ha sido su última apuesta en cada partida que ha jugado\n7- Calcular el valor total de las cartas y el numero total de cartas que se han dado inicialmente en las manos en la partida\n')
-                lista_q=[1,2,3,4,5,6,7]
+                n = input_int('Que informe quieres ver?\n1- Mostrar la Carta inicial más repetida por cada jugador\n2- Jugador que realiza la apuesta más alta por partida\n3- Jugador que realiza apuesta más baja por partida\n4- Porcentaje de partidas ganadas Bots en general. \n5- Mostrar los datos de los jugadores y el tiempo que han durado sus partidas ganadas cuya puntuación obtenida es mayor que la media puntos de las partidas ganadas totales\n6- Calcular la apuesta media por partida\n7- Mostrar los datos de los usuarios que no son bot, así como cual ha sido su última apuesta en cada partida que ha jugado\n8- Calcular el valor total de las cartas y el numero total de cartas que se han dado inicialmente en las manos en la partida\n')
+                lista_q=[1,2,3,4,5,6,7,8]
                 if n in lista_q:
                     break
-            cursor = db.cursor()
+            cursor = db.cursor()            #para ver una query esta se ejecuta y se muestra por pantalla
             cursor.execute(querys[n - 1])
             rows = cursor.fetchall()
             for row in rows:

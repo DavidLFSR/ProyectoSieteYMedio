@@ -17,7 +17,7 @@
   <row>
        <idparticipante>3</idparticipante>
        <carta_inicial>2</carta_inicial>
-       <usos>2</usos>
+       <usos>3</usos>
        <primera_carta>1</primera_carta>
 
   </row>
@@ -30,21 +30,21 @@
   </row>
   <row>
        <idparticipante>5</idparticipante>
-       <carta_inicial>47</carta_inicial>
-       <usos>2</usos>
+       <carta_inicial>30</carta_inicial>
+       <usos>1</usos>
        <primera_carta>1</primera_carta>
 
   </row>
   <row>
        <idparticipante>6</idparticipante>
-       <carta_inicial>24</carta_inicial>
-       <usos>3</usos>
+       <carta_inicial>7</carta_inicial>
+       <usos>1</usos>
        <primera_carta>1</primera_carta>
 
   </row>
   <row>
        <idparticipante>7</idparticipante>
-       <carta_inicial>24</carta_inicial>
+       <carta_inicial>28</carta_inicial>
        <usos>1</usos>
        <primera_carta>1</primera_carta>
 
@@ -119,6 +119,44 @@
        <descripcion>BotBeige</descripcion>
        <ganador_partida>6</ganador_partida>
        <porcentaje>40.00</porcentaje>
+
+  </row>
+</query>
+<query>
+  <row>
+       <ID jugador>2</ID jugador>
+       <Nombre>Jenni</Nombre>
+       <Duración partida>1</Duración partida>
+
+  </row>
+  <row>
+       <ID jugador>6</ID jugador>
+       <Nombre>Jordi</Nombre>
+       <Duración partida>3</Duración partida>
+
+  </row>
+  <row>
+       <ID jugador>6</ID jugador>
+       <Nombre>Jordi</Nombre>
+       <Duración partida>0</Duración partida>
+
+  </row>
+  <row>
+       <ID jugador>3</ID jugador>
+       <Nombre>Leandro</Nombre>
+       <Duración partida>0</Duración partida>
+
+  </row>
+  <row>
+       <ID jugador>3</ID jugador>
+       <Nombre>Leandro</Nombre>
+       <Duración partida>4</Duración partida>
+
+  </row>
+  <row>
+       <ID jugador>6</ID jugador>
+       <Nombre>BotNegro</Nombre>
+       <Duración partida>3</Duración partida>
 
   </row>
 </query>
@@ -264,31 +302,31 @@
 <query>
   <row>
        <numero_de_cartas>22</numero_de_cartas>
-       <valor_total>65.00</valor_total>
+       <valor_total>61.50</valor_total>
        <partida>1</partida>
 
   </row>
   <row>
        <numero_de_cartas>56</numero_de_cartas>
-       <valor_total>164.00</valor_total>
+       <valor_total>148.00</valor_total>
        <partida>2</partida>
 
   </row>
   <row>
        <numero_de_cartas>32</numero_de_cartas>
-       <valor_total>80.00</valor_total>
+       <valor_total>84.00</valor_total>
        <partida>3</partida>
 
   </row>
   <row>
        <numero_de_cartas>32</numero_de_cartas>
-       <valor_total>102.50</valor_total>
+       <valor_total>89.00</valor_total>
        <partida>4</partida>
 
   </row>
   <row>
        <numero_de_cartas>32</numero_de_cartas>
-       <valor_total>103.00</valor_total>
+       <valor_total>104.00</valor_total>
        <partida>5</partida>
 
   </row>
