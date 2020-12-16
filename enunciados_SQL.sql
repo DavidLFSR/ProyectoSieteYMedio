@@ -9,58 +9,88 @@ group by usuario.username,cartas.numero_carta;
 
 -- 2. Jugador que realiza la apuesta más alta por partida. (Mostrar nombre jugador)  *FALTA ACABAR*
 
-select usuario.username 'Nombre del jugador',max(turnos.apuesta) 'Apuesta más alta',partida.idpartida 'ID partida' from usuario
-inner join jugador on usuario.idusuario=jugador.idusuario
+select nombre,max(apuesta),idpartida
+from
+(
+select 
+case 
+when username is not null then usuario.username 
+else descripcion 
+end
+as nombre,max(turnos.apuesta) as apuesta,partida.idpartida as idpartida from jugador
+left join bot on bot.idbot=jugador.idbot
+left join usuario on usuario.idusuario=jugador.idusuario
 inner join participante on jugador.idjugador=participante.id_jugador
 inner join turnos on participante.id_participante=turnos.idparticipante
 inner join partida on turnos.idpartida=partida.idpartida
 where turnos.apuesta is not null
+group by partida.idpartida,username
+) tabla
+where (apuesta,idpartida) in (
+select 
+max(turnos.apuesta),partida.idpartida  as apuesta from jugador
+left join bot on bot.idbot=jugador.idbot
+left join usuario on usuario.idusuario=jugador.idusuario
+inner join participante on jugador.idjugador=participante.id_jugador
+inner join turnos on participante.id_participante=turnos.idparticipante
+inner join partida on turnos.idpartida=partida.idpartida
 group by partida.idpartida
-order by partida.idpartida asc;
+order by max(turnos.apuesta) desc
+)
+group by idpartida
+order by idpartida;
 
-/* select usuario.username 'Nombre del jugador',turnos.apuesta 'Apuesta más alta',partida.idpartida 'ID partida' from usuario
-inner join jugador on usuario.idusuario=jugador.idusuario
+-- 3. Jugador que realiza la apuesta más alta por partida. (Mostrar nombre jugador)  *FALTA ACABAR*
+ 
+select nombre,min(apuesta),idpartida
+from
+(
+select 
+case 
+when username is not null then usuario.username 
+else descripcion 
+end
+as nombre,min(turnos.apuesta) as apuesta,partida.idpartida as idpartida from jugador
+left join bot on bot.idbot=jugador.idbot
+left join usuario on usuario.idusuario=jugador.idusuario
 inner join participante on jugador.idjugador=participante.id_jugador
 inner join turnos on participante.id_participante=turnos.idparticipante
 inner join partida on turnos.idpartida=partida.idpartida
 where turnos.apuesta is not null
-order by partida.idpartida asc; */
-
--- 3. Jugador que realiza la apuesta más baja por partida. (Mostrar nombre jugador) *FALTA ACABAR*
-
-select usuario.username 'Nombre del jugador',min(turnos.apuesta) 'Apuesta más baja',partida.idpartida 'ID partida' from usuario
-inner join jugador on usuario.idusuario=jugador.idusuario
+group by partida.idpartida,username
+) tabla
+where (apuesta,idpartida) in (
+select 
+min(turnos.apuesta),partida.idpartida  as apuesta from jugador
+left join bot on bot.idbot=jugador.idbot
+left join usuario on usuario.idusuario=jugador.idusuario
 inner join participante on jugador.idjugador=participante.id_jugador
 inner join turnos on participante.id_participante=turnos.idparticipante
 inner join partida on turnos.idpartida=partida.idpartida
-where turnos.apuesta is not null
 group by partida.idpartida
-order by partida.idpartida asc;
-
-/* select usuario.username 'Nombre del jugador',turnos.apuesta 'Apuesta más baja',partida.idpartida 'ID partida' from usuario
-inner join jugador on usuario.idusuario=jugador.idusuario
-inner join participante on jugador.idjugador=participante.id_jugador
-inner join turnos on participante.id_participante=turnos.idparticipante
-inner join partida on turnos.idpartida=partida.idpartida
-where turnos.apuesta is not null
-order by partida.idpartida asc; */
-
+order by min(turnos.apuesta) desc
+)
+group by idpartida
+order by idpartida;
+ 
 -- 4. Ratio  de turnos ganados por jugador en cada partida (en porcentaje %). (Mostrar columna nombre jugador, nombre partida, y la nueva columna para el ratio "porcentaje %")
 
 -- 5. Porcentaje de partidas ganadas por bots en general. (Nueva columna "porcentaje %") *FALTA ACABAR*
 
-select partida.idpartida,partida.ganador_partida from partida
+select ganador_partida 'Porcentaje %' from (
+partida
 inner join participante on partida.idpartida=participante.id_partida
 inner join jugador on participante.id_jugador=jugador.idjugador
-inner join bot on jugador.idbot=bot.idbot;
+inner join bot on jugador.idbot=bot.idbot);
 
 -- 6. Mostrar los datos de los jugadores y el tiempo que han durado sus partidas ganadas cuya puntuación obtenida es mayor que la media de puntos de las partidas ganadas totales.
 
-select * from partida;
-select * from usuario
-inner join jugador on jugador.idusuario=usuario.idusuario;
-select * from bot
-inner join jugador on jugador.idbot=bot.idbot;
+select usuario.idusuario,usuario.username from usuario
+inner join jugador on jugador.idusuario=usuario.idusuario
+order by idusuario;
+select bot.idbot,bot.descripcion from bot
+inner join jugador on jugador.idbot=bot.idbot
+order by idbot;
 
 -- 7. Cuántas rondas se ganan en cada partida según el palo. (Ejemplo: Partida 1 - 5 rondas - Bastos como carta inicial)
 
