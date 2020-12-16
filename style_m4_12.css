@@ -6,19 +6,20 @@
     }
     
     #esquinas_redondeadas {
-        border: rgb(1, 105, 65) 3px solid;
+    border: rgb(1, 105, 65) 3px solid;
+    border-radius: 10px;
+    height: 550px;
+    width: 720px;
+    background-color:#5d9b9b;
+    }
+    
+    #tabla_datos {
+        border: black 3px solid;
         border-radius: 10px;
-        height:380px;
-        width: 600px;
-        background-color:#f5f5dc;
-        }
-        
-        #tabla_datos {
-            border: black 3px solid;
-            border-radius: 10px;
-            height: 55px;
-            width: 380px;
-        }
+        height: 320px;
+        width: 670px;
+     
+    }
     
     #td_t1 {
         border: black 1px solid;
