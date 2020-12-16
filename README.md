@@ -4,4 +4,4 @@
 # Aida Iglesias Alcala, aidaiglesiasalcala@gmail.com
 # Martí Llorach Naharro, mllorachnaharro.cf@iesesteveterradas.cat
 # Claudia Algaba Dorado, calgabadorado.cf@iesesteveterradas.cat
-# David
+# David Serrano Ruiz, dsmonslc@gmail.com
